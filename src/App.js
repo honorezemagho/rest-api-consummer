@@ -3,29 +3,45 @@ import "./App.css";
 import  axios  from 'axios';
 
 
+const apiEndpoint = 'https://jsonplaceholder.typicode.com/posts';
+
 class App extends Component {
   state = {
     posts: []
   };
 
+  
   async componentDidMount(){
-    const  {data: posts} = await axios.get('https://jsonplaceholder.typicode.com/posts')
+    const  {data: posts} = await axios.get(apiEndpoint)
     this.setState({ posts})
   }
 
-  handleAdd = () => {
-    console.log("Add");
+ handleAdd =  async() => {
+    const obj = {title: 'a', body: 'b'};
+    const {data: post}  =  await axios.post(apiEndpoint, obj);
+    
+    const posts = [post, ...this.state.posts];
+    this.setState({posts});
   };
 
-  handleUpdate = post => {
-    console.log("Update", post);
+  handleUpdate = async post => {
+   post.title = "Updated Post";
+   await axios.put(apiEndpoint + '/'+post.id, post);
+
+   const posts = [...this.state.posts];
+   const index = posts.indexOf(post);
+    posts[index] = {...post};
+    this.setState({posts});
   };
 
-  handleDelete = post => {
-    console.log("Delete", post);
+  handleDelete = async post => {
+    axios.delete(apiEndpoint + '/' + post.id);
+    const posts = this.state.posts.filter(p => p.id !== post.id);
+    this.setState({posts});
   };
 
   render() {
+    const {posts: allPosts} = this.state;
     return (
       <React.Fragment>
         <button className="btn btn-primary" onClick={this.handleAdd}>
@@ -40,7 +56,7 @@ class App extends Component {
             </tr>
           </thead>
           <tbody>
-            {this.state.posts.map(post => (
+            {allPosts.map(post => (
               <tr key={post.id}>
                 <td>{post.title}</td>
                 <td>
