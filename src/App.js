@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import {ToastContainer} from "react-toastify";
+import http from "./services/httpService";
+import config from "./config.json";
+import 'react-toastify/dist/ReactToastify.css'
 import "./App.css";
-import http from './services/httpService';
-
-const apiEndpoint = 'https://jsonplaceholder.typicode.com/posts';
 
 class App extends Component {
   state = {
@@ -11,13 +12,13 @@ class App extends Component {
 
   
   async componentDidMount(){
-    const  {data: posts} = await http.get(apiEndpoint)
+    const  {data: posts} = await http.get(config.apiEndpoint)
     this.setState({ posts})
   }
 
  handleAdd =  async() => {
     const obj = {title: 'a', body: 'b'};
-    const {data: post}  =  await http.post(apiEndpoint, obj);
+    const {data: post}  =  await http.post(config.apiEndpoint, obj);
     
     const posts = [post, ...this.state.posts];
     this.setState({posts});
@@ -25,7 +26,7 @@ class App extends Component {
 
   handleUpdate = async post => {
    post.title = "Updated Post";
-   await http.put(apiEndpoint + '/'+post.id, post);
+   await http.put(config.apiEndpoint + '/'+post.id, post);
 
    const posts = [...this.state.posts];
    const index = posts.indexOf(post);
@@ -40,7 +41,7 @@ class App extends Component {
     this.setState({posts});
 
     try{
-      await http.delete(apiEndpoint + "/" + post.id);
+      await http.delete(config.apiEndpoint + "/" + post.id);
     }
     catch(ex){
       if(ex.response && ex.response.status === 404){
@@ -54,6 +55,7 @@ class App extends Component {
     const {posts: allPosts} = this.state;
     return (
       <React.Fragment>
+        <ToastContainer/>
         <button className="btn btn-primary" onClick={this.handleAdd}>
           Add
         </button>
