@@ -12,5 +12,5 @@ Create React App is divided into two packages:
 
 ## Preview
 
-You can take a look of it [here](https://github.com/honorezemagho/rest-api-consummer).
+You can take a look of it [here](https://honorezemagho.github.io/rest-api-consummer).
 
