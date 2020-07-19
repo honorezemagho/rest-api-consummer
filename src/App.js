@@ -17,7 +17,7 @@ class App extends Component {
   }
 
  handleAdd =  async() => {
-    const obj = {title: 'a', body: 'b'};
+    const obj = {title: 'New Content Added', body: 'b'};
     const {data: post}  =  await http.post(config.apiEndpoint, obj);
     
     const posts = [post, ...this.state.posts];
